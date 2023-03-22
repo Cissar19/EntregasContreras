@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
 
-class ProductManager {
+export default class ProductManager {
   constructor() {
     this.path = "./productos.json";
     this.products = [];
