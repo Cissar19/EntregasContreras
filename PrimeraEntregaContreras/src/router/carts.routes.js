@@ -19,7 +19,7 @@ CartRouter.get("/:id", async (req, res) => {
 // id de cart => cid
 // id de producto =>pid
 
-CartRouter.post("/:cid/product/pid", async (req, res) => {
+CartRouter.post("/:cid/products/:pid", async (req, res) => {
   let cartId = req.params.cid;
   let productId = req.params.pid;
   res.send(await carts.addProductInCart(cartId, productId));

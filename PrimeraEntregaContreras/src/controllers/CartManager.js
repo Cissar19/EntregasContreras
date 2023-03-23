@@ -33,7 +33,7 @@ class CartManager {
 
   getCartsById = async (id) => {
     let cartById = await this.exist(id);
-    if (!cartById) return "Producto no encontrado, verifica tu id";
+    if (!cartById) return "Carrito no encontrado, verifica tu id";
     return cartById;
   };
 
@@ -42,14 +42,24 @@ class CartManager {
     if (!cartById) return "Carrito no encontrado";
     let productById = await productAll.exist(productId);
     if (!cartById) return "Carrito no encontrado";
+
     let cartAll = await this.readCarts();
-    let cartFilter = cartAll.filter((prod) => prod.id != productId);
-    let cartsConcat = [
-      { id: cartId, products: [{ id: productById.id, cantidad: 1 }] },
-      ...cartFilter,
-    ];
-    await this.writeCarts(cartsConcat);
-    return "Producto Agregado al carrito";
+    let cartFilter = cartAll.filter((cart) => cart.id != cartId);
+
+    if (cartById.products.some((prod) => prod.id === productId)) {
+      let moreproductInCart = cartById.products.find(
+        (prod) => prod.id === productId
+      );
+      moreproductInCart.cantidad + 1;
+      let cartsConcat = [cartById, ...cartFilter];
+      await this.writeCarts(cartsConcat);
+      return "Producto Sumado al carrito";
+    } else {
+      cartById.products.push({ id: productById.id, cantidad: 1 });
+      let cartsConcat = [cartById, ...cartFilter];
+      await this.writeCarts(cartsConcat);
+      return "Producto Agregado al carrito";
+    }
   };
 }
 export default CartManager;
