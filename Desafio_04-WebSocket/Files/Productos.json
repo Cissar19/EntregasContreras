@@ -1,0 +1,22 @@
+[
+  {
+    "title": "Polera Tommy Hilfiger",
+    "description": "Polera de verano",
+    "price": 12990,
+    "code": "1",
+    "stock": 4,
+    "category": "Polera",
+    "status": "True",
+    "id": 1
+  },
+  {
+    "title": "Pantalon Levis",
+    "description": "Jeans de invierno",
+    "price": 25990,
+    "code": "2",
+    "stock": 5,
+    "category": "Pantalones",
+    "status": "True",
+    "id": 3
+  }
+]
