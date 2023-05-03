@@ -1,7 +1,11 @@
 import { Router } from "express";
+// import path from "path";
+// import ProductManager from "../services/filesystem/controller/productManager.js";
 import ProductService from "../services/db/controllers/products.service.js";
 
 const router = Router();
+
+// const pm = new ProductManager(path.join(".", "files"));
 const pm = new ProductService();
 
 /***   Obtiene Todos los productos ***/
@@ -14,6 +18,7 @@ router.get("/", async (req, res) => {
   });
 });
 
+/***   Obtiene producto por ID ***/
 router.get("/:pid", async (req, res) => {
   let products = await pm.getProductById(req.params.pid);
 
@@ -27,10 +32,10 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
+/***   Carga producto ***/
 router.post("/", async (req, res) => {
   try {
     let product = await pm.addProduct(req.body);
-
     res.status(200).send({
       status: "Success",
       message: `Se cargo el producto Cod: ${product}`,

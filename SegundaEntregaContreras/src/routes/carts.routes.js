@@ -1,10 +1,15 @@
 import { Router } from "express";
+// import path from "path";
+// import CartManager from "../services/filesystem/controller/cartManager.js";
+// import ProductManager from "../services/filesystem/controller/productManager.js";
 import CartService from "../services/db/controllers/carts.service.js";
 import ProductService from "../services/db/controllers/products.service.js";
 
 const router = Router();
+
 const car = new CartService();
 
+/***   Carga carrito ***/
 router.post("/", async (req, res) => {
   await car.addCart();
   res.status(200).send({
@@ -13,6 +18,7 @@ router.post("/", async (req, res) => {
   });
 });
 
+/***   Obtiene Todos los carritos ***/
 router.get("/", async (req, res) => {
   let carts = await car.getCarts();
   let limit = req.query.limit;
@@ -23,6 +29,7 @@ router.get("/", async (req, res) => {
   });
 });
 
+/***   Obtiene carrito por ID ***/
 router.get("/:cid", async (req, res) => {
   let carts = await car.getCartById(req.params.cid);
 
@@ -36,12 +43,14 @@ router.get("/:cid", async (req, res) => {
   }
 });
 
+/***   Cargo Producto en Carrito ID ***/
 router.post("/:cid/products/:pid", async (req, res) => {
   let cid = req.params.cid;
   let pid = req.params.pid;
 
   let carts = await car.getCartById(cid);
 
+  /* Verifico si existe el id del carrito */
   if (carts.length === 0) {
     res.status(202).send({
       status: "info",
@@ -49,13 +58,14 @@ router.post("/:cid/products/:pid", async (req, res) => {
     });
   } else {
     let product = await new ProductService().getProductById(pid);
-
+    /* Verifico si existe el id del producto en el maestro de productos  */
     if (product.length === 0) {
       res.status(202).send({
         status: "info",
         error: `Se encontró carrito con ID: ${cid} pero No se encontró el producto con Id: ${pid}`,
       });
     } else {
+      /* Existe el id del carrito y el id del producto en el maestro de productos */
       car.addProductCar(cid, pid);
 
       res.status(200).send({
@@ -79,6 +89,7 @@ router.delete("/:cid", async (req, res) => {
   }
 });
 
+/***    Borro del carrito el producto indicado   ***/
 router.delete("/:cid/products/:pid", async (req, res) => {
   let cid = req.params.cid;
   let pid = req.params.pid;
@@ -95,6 +106,7 @@ router.delete("/:cid/products/:pid", async (req, res) => {
   }
 });
 
+/***   Actualizo la cantidad de un producto pasandole por el body ***/
 router.put("/:cid/product/:pid", async (req, res) => {
   let cid = req.params.cid;
   let pid = req.params.pid;
@@ -102,6 +114,7 @@ router.put("/:cid/product/:pid", async (req, res) => {
 
   let carts = await car.getCartById(cid);
 
+  /* Verifico si existe el id del carrito */
   if (carts.length === 0) {
     res.status(202).send({
       status: "info",
@@ -109,12 +122,14 @@ router.put("/:cid/product/:pid", async (req, res) => {
     });
   } else {
     let product = await new ProductService().getProductById(pid);
+    /* Verifico si existe el id del producto en el maestro de productos  */
     if (product.length === 0) {
       res.status(202).send({
         status: "info",
         error: `Se encontró carrito con ID: ${cid} pero No se encontró el producto con Id: ${pid}`,
       });
     } else {
+      /* Existe el id del carrito y el id del producto en el maestro de productos */
       car.updateQuantityProduct(cid, pid, qty);
 
       res.status(200).send({
@@ -125,12 +140,14 @@ router.put("/:cid/product/:pid", async (req, res) => {
   }
 });
 
+/***   Agrego productos desde un array por el body  ***/
 router.put("/:cid", async (req, res) => {
   let cid = req.params.cid;
   let arr = req.body;
 
   let carts = await car.getCartById(cid);
 
+  /* Verifico si existe el id del carrito */
   if (carts.length === 0) {
     res.status(202).send({
       status: "info",

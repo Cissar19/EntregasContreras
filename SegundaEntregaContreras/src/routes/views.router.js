@@ -29,11 +29,10 @@ router.get("/products", async (req, res) => {
     ? `http://localhost:8080/products?page=${prod.nextPage}`
     : "";
   prod.isValid = !(page <= 0 || page > prod.totalPages);
-  // let products = prod.docs.map((p) => p.toObject());
+
   res.render("products", prod);
 });
 
-/***  Obtiene Todos los productos del Carrito indicado y los muestra por navegador  ***/
 router.get("/carts/:cid", async (req, res) => {
   let carts = await cartService.getCartById(req.params.cid);
 

@@ -1,6 +1,12 @@
 import express, { urlencoded } from "express";
-
+import exphbs from "express-handlebars";
+import mongoose from "mongoose";
 import _dirname from "./utils.js";
+
+import productRoutes from "./routes/products.routes.js";
+import cartRoutes from "./routes/carts.routes.js";
+import viewsRouter from "./routes/views.router.js";
+import path from "path";
 
 const app = express();
 const PORT = 8080;
@@ -30,8 +36,17 @@ app.use("/", viewsRouter);
 app.use("/api/products", productRoutes);
 app.use("/api/carts", cartRoutes);
 
-const httpServer = app.listen(PORT, () => {
-  console.log(`Servidor escuchando en el puerto ${PORT}`);
-});
+const httpServer = app.listen(PORT, () => {});
 
-httpServer();
+const connectMongoDB = async () => {
+  try {
+    await mongoose.connect(
+      "mongodb+srv://admin:admin@cluster0.sbrociu.mongodb.net/test"
+    );
+    console.log("Estamos arriba papussss ");
+  } catch (error) {
+    console.error("No se pudo conectar a la BD usando Moongose: " + error);
+    process.exit();
+  }
+};
+connectMongoDB();
